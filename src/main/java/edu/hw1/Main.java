@@ -12,7 +12,10 @@ public final class Main {
     }
 
     public static void main(String[] args) {
-        // Press Alt+Enter with your caret at the highlighted text to see how
+
+
+
+        /*// Press Alt+Enter with your caret at the highlighted text to see how
         // IntelliJ IDEA suggests fixing it.
         LOGGER.info("Hello and welcome!");
 
@@ -22,6 +25,6 @@ public final class Main {
             // Press Shift+F9 to start debugging your code. We have set one breakpoint
             // for you, but you can always add more by pressing Ctrl+F8.
             LOGGER.info("i = {}", i);
-        }
+        }*/
     }
 }
