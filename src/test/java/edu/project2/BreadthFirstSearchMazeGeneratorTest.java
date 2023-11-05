@@ -1,14 +1,14 @@
 package edu.project2;
 
 import org.junit.jupiter.api.Test;
+import static edu.project2.MazeUtils.removePartitionBetweenCells;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static edu.project2.MazeUtils.removePartitionBetweenCells;
 
-public class DeepFirstSearchMazeGeneratorTest {
+public class BreadthFirstSearchMazeGeneratorTest {
     @Test
-    void generateMazeByDeepFirstSearchGenerator() {
-        DeepFirstSearchMazeGenerator generator = new DeepFirstSearchMazeGenerator();
+    void generateMazeByBreadthFirstSearchMazeGenerator() {
+        BreadthFirstSearchMazeGenerator generator = new BreadthFirstSearchMazeGenerator();
         int height = 15;
         int width = 15;
         Maze maze = generator.generate(height, width);

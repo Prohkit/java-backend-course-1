@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
+import static edu.project2.MazeUtils.getUnvisitedNeighbors;
 
 public class BacktrackingMethodSolver implements Solver {
 
@@ -20,7 +21,7 @@ public class BacktrackingMethodSolver implements Solver {
         Stack<Cell> cellStack = new Stack<>();
         Random random = new Random();
         while (!(currentCell.row() == end.row() && currentCell.col() == end.col())) {
-            List<Cell> neighbouringCells = getUnvisitedNeighbors(grid, currentCell);
+            List<Cell> neighbouringCells = getUnvisitedNeighbors(grid, currentCell, VISITED_CELL);
             if (!neighbouringCells.isEmpty()) {
                 cellStack.push(currentCell);
                 result.add(new Coordinate(currentCell.row(), currentCell.col()));
@@ -34,28 +35,5 @@ public class BacktrackingMethodSolver implements Solver {
         }
         result.add(new Coordinate(currentCell.row(), currentCell.col()));
         return result;
-    }
-
-    private List<Cell> getUnvisitedNeighbors(Cell[][] grid, Cell currentCell) {
-        List<Cell> neighbouringCells = new ArrayList<>();
-        int currentRow = currentCell.row();
-        int currentCol = currentCell.col();
-        if (grid[currentRow - 1][currentCol].type() == Cell.Type.PASSAGE
-            && !VISITED_CELL.contains(grid[currentRow - 1][currentCol])) {
-            neighbouringCells.add(grid[currentRow - 1][currentCol]);
-        }
-        if (grid[currentRow + 1][currentCol].type() == Cell.Type.PASSAGE
-            && !VISITED_CELL.contains(grid[currentRow + 1][currentCol])) {
-            neighbouringCells.add(grid[currentRow + 1][currentCol]);
-        }
-        if (grid[currentRow][currentCol - 1].type() == Cell.Type.PASSAGE
-            && !VISITED_CELL.contains(grid[currentRow][currentCol - 1])) {
-            neighbouringCells.add(grid[currentRow][currentCol - 1]);
-        }
-        if (grid[currentRow][currentCol + 1].type() == Cell.Type.PASSAGE
-            && !VISITED_CELL.contains(grid[currentRow][currentCol + 1])) {
-            neighbouringCells.add(grid[currentRow][currentCol + 1]);
-        }
-        return neighbouringCells;
     }
 }

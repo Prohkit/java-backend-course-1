@@ -1,13 +1,13 @@
 package edu.project2;
 
+import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BacktrackingMethodSolverTest {
+public class BreadthFirstSearchSolverTest {
     @Test
-    void solveMazeByBacktrackingMethodSolver() {
+    void solveMazeByBreadthFirstSearchSolver() {
         // given
         Cell[][] grid = new Cell[5][5];
         fillGrid(grid);
@@ -23,7 +23,7 @@ public class BacktrackingMethodSolverTest {
         ).toList();
         Coordinate startCoordinate = new Coordinate(1, 1);
         Coordinate endCoordinate = new Coordinate(1, 3);
-        BacktrackingMethodSolver solver = new BacktrackingMethodSolver();
+        BreadthFirstSearchSolver solver = new BreadthFirstSearchSolver();
 
         // when
         List<Coordinate> result = solver.solve(maze, startCoordinate, endCoordinate);
