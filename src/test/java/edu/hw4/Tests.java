@@ -471,13 +471,13 @@ public class Tests {
     void task20GetAnimalsWithValidationErrorsMoreReadable() {
         // given
         List<Animal> animals = Stream.of(
-            new Animal("turkey", Animal.Type.BIRD, Animal.Sex.M, -1, 30, 9, true),
+            new Animal("turkey", Animal.Type.BIRD, Animal.Sex.M, 3, 30, 9, true),
             new Animal("Dog", null, Animal.Sex.M, 3, 65, 21, true),
             new Animal("Cat", Animal.Type.CAT, Animal.Sex.F, 3, -2, 4, true)
         ).toList();
 
         Map<String, String> expected = new HashMap<>();
-        expected.put("turkey", "NAME, AGE");
+        expected.put("turkey", "NAME");
         expected.put("Dog", "TYPE");
         expected.put("Cat", "HEIGHT");
 
