@@ -22,7 +22,7 @@ public class DeepFirstSearchMazeGenerator implements Generator {
         Random random = new Random();
         while (!cellStack.isEmpty()) {
             currentCell = cellStack.pop();
-            List<Cell> neighbouringCells = getUnvisitedNeighbors(grid, currentCell);
+            List<Cell> neighbouringCells = getUnvisitedNeighborsBehindTheWall(grid, currentCell);
             if (!neighbouringCells.isEmpty()) {
                 cellStack.push(currentCell);
                 Cell neighboringCell = neighbouringCells.get(random.nextInt(neighbouringCells.size()));
@@ -56,7 +56,7 @@ public class DeepFirstSearchMazeGenerator implements Generator {
         return grid;
     }
 
-    private void removePartitionBetweenCells(Cell[][] grid, Cell currentCell, Cell neighboringCell) {
+    public void removePartitionBetweenCells(Cell[][] grid, Cell currentCell, Cell neighboringCell) {
         if (currentCell.row() == neighboringCell.row()) {
             if (currentCell.col() - neighboringCell.col() < 0) {
                 grid[currentCell.row()][currentCell.col() + 1] =
@@ -77,7 +77,7 @@ public class DeepFirstSearchMazeGenerator implements Generator {
         }
     }
 
-    private List<Cell> getUnvisitedNeighbors(Cell[][] grid, Cell currentCell) {
+    private List<Cell> getUnvisitedNeighborsBehindTheWall(Cell[][] grid, Cell currentCell) {
         List<Cell> neighbouringCells = new ArrayList<>();
         Cell leftCell = new Cell(currentCell.row() - 2, currentCell.col(), Cell.Type.PASSAGE);
         if (currentCell.row() - 2 > 0 && !VISITED_CELL.contains(leftCell)) {
