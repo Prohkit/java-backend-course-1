@@ -1,4 +1,4 @@
-package edu.hw6;
+package edu.hw6.task1;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -6,8 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;

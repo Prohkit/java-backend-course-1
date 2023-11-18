@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Task2 {
-    public static void cloneFile(Path path) {
+    public void cloneFile(Path path) {
         Path absolutePath = path.toAbsolutePath();
         Path pathName = path.getFileName();
         String[] baseAndExtension = pathName.toString().split("\\.(?=[^\\.]+$)");
@@ -19,7 +19,7 @@ public class Task2 {
         }
     }
 
-    private static Path getPathNameCopy(int whichCopy, Path dir, String[] baseAndExtension) {
+    private Path getPathNameCopy(int whichCopy, Path dir, String[] baseAndExtension) {
         Path pathNameCopy;
         if (whichCopy == 1) {
             pathNameCopy = Path.of(dir + "\\" + baseAndExtension[0] + " - копия." + baseAndExtension[1]);
@@ -30,7 +30,7 @@ public class Task2 {
         return pathNameCopy;
     }
 
-    private static boolean tryToCreateFile(Path pathNameCopy) {
+    private boolean tryToCreateFile(Path pathNameCopy) {
         if (!Files.exists(pathNameCopy)) {
             try {
                 Files.createFile(pathNameCopy);

@@ -1,0 +1,20 @@
+TCP 135 EPMAP
+UDP 137 Служба имен NetBIOS
+UDP 138 Служба датаграмм NetBIOS
+TCP 139 Служба сеансов NetBIOS
+TCP 445 Microsoft-DS Active Directory
+TCP 843 Adobe Flash
+UDP 1900 Simple Service Discovery Protocol (SSDP)
+UDP 3702 Динамическое обнаружение веб-служб
+UDP 5353 Многоадресный DNS
+UDP 5355 Link-Local Multicast Name Resolution (LLMNR)
+TCP 17500 Dropbox
+UDP 17500 Dropbox
+TCP 27017 MongoDB
+TCP 5432 PostgreSQL
+UDP 5432 PostgreSQL
+TCP 3389 RDP
+TCP 22 SSH
+UDP 22 SSH
+TCP 443 HTTPS
+UDP 443 HTTPS
