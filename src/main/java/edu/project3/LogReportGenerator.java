@@ -13,15 +13,32 @@ import java.util.stream.Collectors;
 import org.apache.commons.cli.Option;
 
 public class LogReportGenerator {
-    public void generateLogReport(List<LogRecord> logRecordList, Map<String, Option> cmdArgs) {
-        System.out.println(getRequestsCount(logRecordList));
-        System.out.println(getAverageResponseSize(logRecordList));
+    public LogReport generateLogReport(
+        List<LogRecord> logRecordList,
+        Map<String, Option> cmdArgs,
+        List<String> fileNames
+    ) {
+        Metrics metrics = getMetrics(logRecordList, cmdArgs, fileNames);
         List<RequestedResource> requestedResources = getRequestedResources(logRecordList);
-        requestedResources.forEach(requestedResource -> System.out.println(
-            requestedResource.getResourceName() + " " + requestedResource.getRequestsCount()));
         List<ResponseCode> responseCodes = getResponseCodes(logRecordList);
-        responseCodes.forEach(responseCode -> System.out.println(
-            responseCode.getCode() + " " + responseCode.getCodeName() + " " + responseCode.getIssuesCount()));
+        return new LogReport(metrics, requestedResources, responseCodes);
+    }
+
+    private Metrics getMetrics(
+        List<LogRecord> logRecordList, Map<String, Option> cmdArgs,
+        List<String> fileNames
+    ) {
+        Integer requestsCount = getRequestsCount(logRecordList);
+        Integer averageResponseSize = getAverageResponseSize(logRecordList);
+        String startDate = null;
+        if (cmdArgs.containsKey("from")) {
+            startDate = cmdArgs.get("from").getValue();
+        }
+        String endDate = null;
+        if (cmdArgs.containsKey("to")) {
+            endDate = cmdArgs.get("to").getValue();
+        }
+        return new Metrics(fileNames, startDate, endDate, requestsCount, averageResponseSize);
     }
 
     private Integer getRequestsCount(List<LogRecord> logRecordList) {
@@ -83,11 +100,19 @@ public class LogReportGenerator {
         return null;
     }
 
-    private List<String> getRemoteAddressesNumberOfRequestsFromWhichExceedsOrEqualK(List<LogRecord> logRecordList, int k) {
+    // дополнительные статистики
+    private List<String> getRemoteAddressesNumberOfRequestsFromWhichExceedsOrEqualK(
+        List<LogRecord> logRecordList,
+        int k
+    ) {
         return logRecordList.stream()
-            .filter(logRecord -> Collections.frequency(logRecordList, logRecord) > k)
             .map(LogRecord::getRemoteAddr)
+            .filter(remoteAddr -> Collections.frequency(logRecordList, remoteAddr) > k)
             .toList();
     }
 
+    private String getMostOftenHttpUserAgent(List<LogRecord> logRecordList) {
+//        logRecordList.stream().max(Comparator.comparing(logRecord -> logRecord.get))
+        return null;
+    }
 }

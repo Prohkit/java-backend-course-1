@@ -5,15 +5,15 @@ import java.util.List;
 
 public class Metrics {
     private final List<String> fileNames;
-    private final OffsetDateTime startDate;
-    private final OffsetDateTime endDate;
+    private final String startDate;
+    private final String endDate;
     private final Integer requestCount;
     private final double averageResponseSize;
 
     public Metrics(
         List<String> fileNames,
-        OffsetDateTime startDate,
-        OffsetDateTime endDate,
+        String startDate,
+        String endDate,
         Integer requestCount,
         Integer averageResponseSize
     ) {
@@ -28,11 +28,11 @@ public class Metrics {
         return fileNames;
     }
 
-    public OffsetDateTime getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public OffsetDateTime getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 

@@ -19,12 +19,7 @@ public class ParserCLI {
     }
 
     public Map<String, Option> parseCLI(String[] args) {
-        Options options = new Options();
-        options.addOption("jar", true, "jar file");
-        options.addOption("", "path", true, "path to file");
-        options.addOption("", "from", true, "from time");
-        options.addOption("", "to", true, "to time");
-        options.addOption("", "format", true, "md or adoc");
+        Options options = getOptions();
         CommandLineParser parser = new DefaultParser();
         try {
             CommandLine cmd = parser.parse(options, args);
@@ -36,5 +31,25 @@ public class ParserCLI {
             LOGGER.info(e.getMessage());
         }
         return null;
+    }
+
+    private Options getOptions() {
+        Options options = new Options();
+        options.addOption("jar", true, "jar file");
+        options.addOption("", "path", true, "path to file");
+        Option from = new Option("", "from", true, "from time");
+        from.setOptionalArg(true);
+        options.addOption(from);
+        Option to = new Option("", "to", true, "to time");
+        to.setOptionalArg(true);
+        options.addOption(to);
+        Option format = new Option("", "format", true, "md or adoc");
+        format.setOptionalArg(true);
+        options.addOption(format);
+        return options;
+    }
+
+    public boolean hasFromOrToInOptions(Map<String, Option> cmdArgs) {
+        return cmdArgs.containsKey("from") || cmdArgs.containsKey("to");
     }
 }

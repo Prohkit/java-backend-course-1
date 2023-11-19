@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -25,42 +26,58 @@ import static java.net.http.HttpClient.newHttpClient;
 public class LogAnalyzer {
     private static final int TIME_BEFORE_REQUEST_INTERRUPTION = 10;
 
-    public static void main(String[] args) {
-        String argsForTest =
-            "java -jar nginx-log-stats.jar --path src/main/java/edu/project3/logs.txt --from 2023-08-31 --format markdown";
-        String[] splitArgs = argsForTest.split(" ");
-        Map<String, Option> cmdArgs = new ParserCLI().parseCLI(splitArgs);
+    public static void main(String[] args) throws IOException {
         LogAnalyzer logAnalyzer = new LogAnalyzer();
-        List<String> paths = cmdArgs.get("path").getValuesList();
-        List<String> logsList = logAnalyzer.getLogList(paths);
-        List<LogRecord> logRecords = logAnalyzer.getLogRecords(logsList);
         LogReportGenerator logReportGenerator = new LogReportGenerator();
-        logReportGenerator.generateLogReport(logRecords, cmdArgs);
-//        String stringPath =
-//        PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + stringPath);
-//        try (var walker = Files.walk(Paths.get("."))) {
-//            walker.forEach((path) -> {
-//                path = path.toAbsolutePath().normalize();
-//                System.out.print("Path: " + path + " ");
-//                if (pathMatcher.matches(path)) {
-//                    System.out.print("matched");
-//                }
-//                System.out.println();
-//            });
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+        ParserCLI parserCLI = new ParserCLI();
+        Map<String, Option> cmdArgs = parserCLI.parseCLI(args);
+
+        String path = cmdArgs.get("path").getValue();
+        List<String> logsList = logAnalyzer.getLogList(path);
+        List<LogRecord> logRecords = logAnalyzer.getLogRecords(logsList);
+
+        if (parserCLI.hasFromOrToInOptions(cmdArgs)) {
+            logRecords = logAnalyzer.trimLogRecords(logRecords, cmdArgs);
+        }
+
+        List<Path> logPaths = logAnalyzer.getLogPaths(path);
+        List<String> fileNames = logAnalyzer.getLogFileNames(logPaths);
+        LogReport logReport = logReportGenerator.generateLogReport(logRecords, cmdArgs, fileNames);
+        ReportPrinter printer = new ReportPrinter();
+        printer.printReport(logReport, cmdArgs);
     }
 
-    private List<String> getLogList(List<String> paths) {
+    private List<LogRecord> trimLogRecords(List<LogRecord> logRecordList, Map<String, Option> cmdArgs) {
+        List<LogRecord> trimmedLogRecords = new ArrayList<>(logRecordList);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
+        if (cmdArgs.containsKey("from")) {
+            LocalDate from = LocalDate.parse(cmdArgs.get("from").getValue(), formatter);
+            trimmedLogRecords.retainAll(logRecordList.stream()
+                .filter(logRecord -> logRecord.getTimeLocal().toLocalDate().isAfter(from)).toList());
+        }
+        if (cmdArgs.containsKey("to")) {
+            LocalDate to = LocalDate.parse(cmdArgs.get("to").getValue(), formatter);
+            trimmedLogRecords.retainAll(logRecordList.stream()
+                .filter(logRecord -> logRecord.getTimeLocal().toLocalDate().isBefore(to)).toList());
+        }
+        return trimmedLogRecords;
+    }
+
+    private List<String> getLogFileNames(List<Path> logPaths) {
+        List<String> fileNames = new ArrayList<>();
+        for (Path logPath : logPaths) {
+            fileNames.add(String.valueOf(logPath.getFileName()));
+        }
+        return fileNames;
+    }
+
+    private List<String> getLogList(String path) {
         LogAnalyzer logAnalyzer = new LogAnalyzer();
         List<String> logsList = new ArrayList<>();
-        for (String path : paths) {
-            if (logAnalyzer.isURI(path)) {
-                logsList.addAll(logAnalyzer.getLogsFromUri(path));
-            } else {
-                logsList.addAll(logAnalyzer.getLogsFromFile(path));
-            }
+        if (logAnalyzer.isURI(path)) {
+            logsList.addAll(logAnalyzer.getLogsFromUri(path));
+        } else {
+            logsList.addAll(logAnalyzer.getLogsFromFile(path));
         }
         return logsList;
     }
@@ -86,30 +103,36 @@ public class LogAnalyzer {
     }
 
     private List<String> getLogsFromFile(String stringPath) {
-
-        Path path1 = null;
+        List<String> logs = new ArrayList<>();
+        List<Path> paths = new ArrayList<>();
         if (stringPath.contains("*")) {
-            PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + stringPath);
-            try (var walker = Files.walk(Paths.get("."))) {
-                walker.forEach((path) -> {
-                    path = path.toAbsolutePath().normalize();
-                    System.out.print("Path: " + path + " ");
-                    if (pathMatcher.matches(path)) {
-                        System.out.print("matched");
-                    }
-                    System.out.println();
-                });
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            paths.addAll(getLogPaths(stringPath));
         } else {
-            path1 = Paths.get(stringPath);
+            paths.add(Paths.get(stringPath));
         }
         try {
-            return Files.readAllLines(path1);
+            for (Path path : paths) {
+                logs.addAll(Files.readAllLines(path));
+            }
+            return logs;
         } catch (IOException e) {
         }
         return new ArrayList<>();
+    }
+
+    private List<Path> getLogPaths(String stringPath) {
+        PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + stringPath);
+        List<Path> logPaths = new ArrayList<>();
+        try (var walker = Files.walk(Paths.get("."))) {
+            walker.forEach(path -> {
+                if (pathMatcher.matches(path.normalize())) {
+                    logPaths.add(path.normalize());
+                }
+            });
+            return logPaths;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private List<String> getLogsFromUri(String path) {
