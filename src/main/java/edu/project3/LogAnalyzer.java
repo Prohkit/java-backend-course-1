@@ -26,7 +26,7 @@ import static java.net.http.HttpClient.newHttpClient;
 public class LogAnalyzer {
     private static final int TIME_BEFORE_REQUEST_INTERRUPTION = 10;
 
-    public static void main(String[] args) throws IOException {
+    /*public static void main(String[] args) throws IOException {
         LogAnalyzer logAnalyzer = new LogAnalyzer();
         LogReportGenerator logReportGenerator = new LogReportGenerator();
         ParserCLI parserCLI = new ParserCLI();
@@ -45,8 +45,8 @@ public class LogAnalyzer {
         LogReport logReport = logReportGenerator.generateLogReport(logRecords, cmdArgs, fileNames);
         ReportPrinter printer = new ReportPrinter();
         printer.printReport(logReport, cmdArgs);
-    }
-
+    }*/
+@SuppressWarnings("MultipleStringLiterals")
     private List<LogRecord> trimLogRecords(List<LogRecord> logRecordList, Map<String, Option> cmdArgs) {
         List<LogRecord> trimmedLogRecords = new ArrayList<>(logRecordList);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);

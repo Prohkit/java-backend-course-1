@@ -33,6 +33,7 @@ public class ParserCLI {
         return null;
     }
 
+@SuppressWarnings("MultipleStringLiterals")
     private Options getOptions() {
         Options options = new Options();
         options.addOption("jar", true, "jar file");

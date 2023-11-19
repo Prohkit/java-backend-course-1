@@ -1,12 +1,13 @@
 package edu.project3;
 
-import org.apache.commons.cli.Option;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.cli.Option;
 
 public class ReportPrinter {
+    @SuppressWarnings("MultipleStringLiterals")
     public void printReport(LogReport report, Map<String, Option> cmdArgs) {
         try {
             String reportString = null;
@@ -28,6 +29,7 @@ public class ReportPrinter {
         }
     }
 
+    @SuppressWarnings("MultipleStringLiterals")
     private String generateAdoc(LogReport report) {
         String to = "-";
         String from = "-";
@@ -47,7 +49,7 @@ public class ReportPrinter {
             .append("|Файлы: |");
         metrics.getFileNames().forEach(x -> sb.append(x).append(","));
         sb.append("\n");
-            sb.append("|Начальная Дата |").append(from).append("\n")
+        sb.append("|Начальная Дата |").append(from).append("\n")
             .append("|Конечная Дата |").append(to).append("\n")
             .append("|Количество запросов |").append(metrics.getRequestCount()).append("\n")
             .append("|Средний размер ответа |").append(metrics.getAverageResponseSize()).append("\n");
@@ -73,6 +75,7 @@ public class ReportPrinter {
         return new String(sb);
     }
 
+    @SuppressWarnings("MultipleStringLiterals")
     private String generateMd(LogReport report) {
         String to = "-";
         String from = "-";

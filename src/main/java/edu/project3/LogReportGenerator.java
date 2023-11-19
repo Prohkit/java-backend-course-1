@@ -24,6 +24,7 @@ public class LogReportGenerator {
         return new LogReport(metrics, requestedResources, responseCodes);
     }
 
+@SuppressWarnings("MultipleStringLiterals")
     private Metrics getMetrics(
         List<LogRecord> logRecordList, Map<String, Option> cmdArgs,
         List<String> fileNames
