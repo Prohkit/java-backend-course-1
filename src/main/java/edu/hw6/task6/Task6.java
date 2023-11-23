@@ -34,7 +34,7 @@ public class Task6 {
 
     @SuppressWarnings("MagicNumber")
     public List<Port> getKnownPortsWithDescription() {
-        try (Stream<String> knownPorts = Files.lines(Path.of("src/main/java/edu/hw6/knownPorts.txt"))) {
+        try (Stream<String> knownPorts = Files.lines(Path.of("src/main/java/edu/hw6/task6/knownPorts.txt"))) {
             int partsCount = 3;
             return knownPorts
                 .map(string -> string.split(" ", partsCount))
