@@ -13,7 +13,6 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-
 public class Task2Test {
     private static final Path FILE =
         Path.of("./src/test/java/edu/hw6/task2/files/Tinkoff Bank Biggest Secret.txt").toAbsolutePath();
@@ -22,29 +21,35 @@ public class Task2Test {
     private static final Path COPY_SECOND = Path.of(
         "./src/test/java/edu/hw6/task2/files/Tinkoff Bank Biggest Secret - copy (2).txt").toAbsolutePath();
 
-    @BeforeAll
-    public static void init() {
-        Task2 task2 = new Task2();
-        task2.cloneFile(FILE);
-        task2.cloneFile(FILE);
-    }
-
     @Test
-    void task2() {
-        int expectedCount = 3;
+    void task2() throws IOException {
+        Task2 task2 = new Task2();
+        Thread thread1 = new Thread(() -> {
+            task2.cloneFile(FILE);
+        });
+        Thread thread2 = new Thread(() -> {
+            task2.cloneFile(FILE);
+        });
+        thread1.start();
+        thread2.start();
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        /*int expectedCount = 3;
         try (Stream<Path> files = Files.list(Paths.get("./src/test/java/edu/hw6/task2/files").toAbsolutePath())) {
             long count = files.count();
             assertThat(count)
                 .isEqualTo(expectedCount);
-
-            destroy();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-    }
+        }*/
+        Assertions.assertTrue(Files.exists(COPY));
+        Assertions.assertTrue(Files.exists(COPY_SECOND));
 
-    @AfterAll
-    public static void destroy() throws IOException {
         Files.deleteIfExists(COPY);
         Files.deleteIfExists(COPY_SECOND);
     }

@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Task2 {
-    public void cloneFile(Path copyFrom) {
+    public synchronized void cloneFile(Path copyFrom) {
         Path absolutePath = copyFrom.toAbsolutePath();
         Path pathName = copyFrom.getFileName();
         String[] baseAndExtension = pathName.toString().split("\\.(?=[^\\.]+$)");
