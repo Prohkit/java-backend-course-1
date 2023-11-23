@@ -1,5 +1,8 @@
 package edu.project3;
 
+import edu.project3.logReport.LogReport;
+import edu.project3.logReport.LogReportGenerator;
+import edu.project3.printers.ReportPrinter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -26,7 +29,8 @@ import static java.net.http.HttpClient.newHttpClient;
 public class LogAnalyzer {
     private static final int TIME_BEFORE_REQUEST_INTERRUPTION = 10;
 
-    /*public static void main(String[] args) throws IOException {
+    @SuppressWarnings("UncommentedMain")
+    public static void main(String[] args) {
         LogAnalyzer logAnalyzer = new LogAnalyzer();
         LogReportGenerator logReportGenerator = new LogReportGenerator();
         ParserCLI parserCLI = new ParserCLI();
@@ -45,8 +49,9 @@ public class LogAnalyzer {
         LogReport logReport = logReportGenerator.generateLogReport(logRecords, cmdArgs, fileNames);
         ReportPrinter printer = new ReportPrinter();
         printer.printReport(logReport, cmdArgs);
-    }*/
-@SuppressWarnings("MultipleStringLiterals")
+    }
+
+    @SuppressWarnings("MultipleStringLiterals")
     private List<LogRecord> trimLogRecords(List<LogRecord> logRecordList, Map<String, Option> cmdArgs) {
         List<LogRecord> trimmedLogRecords = new ArrayList<>(logRecordList);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
@@ -116,8 +121,8 @@ public class LogAnalyzer {
             }
             return logs;
         } catch (IOException e) {
+            return new ArrayList<>();
         }
-        return new ArrayList<>();
     }
 
     private List<Path> getLogPaths(String stringPath) {
@@ -149,8 +154,8 @@ public class LogAnalyzer {
                 .body()
                 .split("\n"));
         } catch (IOException | InterruptedException | URISyntaxException e) {
+            return new ArrayList<>();
         }
-        return new ArrayList<>();
     }
 
     private boolean isURI(String uri) {

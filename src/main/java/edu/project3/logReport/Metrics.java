@@ -1,4 +1,4 @@
-package edu.project3;
+package edu.project3.logReport;
 
 import java.util.List;
 

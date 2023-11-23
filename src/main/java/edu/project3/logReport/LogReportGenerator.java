@@ -1,5 +1,6 @@
-package edu.project3;
+package edu.project3.logReport;
 
+import edu.project3.LogRecord;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,7 +25,7 @@ public class LogReportGenerator {
         return new LogReport(metrics, requestedResources, responseCodes);
     }
 
-@SuppressWarnings("MultipleStringLiterals")
+    @SuppressWarnings("MultipleStringLiterals")
     private Metrics getMetrics(
         List<LogRecord> logRecordList, Map<String, Option> cmdArgs,
         List<String> fileNames
@@ -87,7 +88,7 @@ public class LogReportGenerator {
     }
 
     private String getCodeName(Integer code) {
-        Path path = Paths.get("./src/main/java/edu/project3/CodeNameConfig.txt");
+        Path path = Paths.get("src/main/java/edu/project3/logReport/CodeNameConfig.txt");
         try {
             List<String> lines = Files.readAllLines(path);
             for (String line : lines) {
@@ -98,7 +99,7 @@ public class LogReportGenerator {
             }
         } catch (IOException e) {
         }
-        return null;
+        return "-";
     }
 
     // дополнительные статистики

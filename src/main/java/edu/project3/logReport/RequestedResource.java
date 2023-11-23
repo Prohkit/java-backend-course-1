@@ -1,4 +1,4 @@
-package edu.project3;
+package edu.project3.logReport;
 
 public class RequestedResource {
     private final String resourceName;

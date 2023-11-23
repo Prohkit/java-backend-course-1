@@ -9,11 +9,8 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class ParserCLI {
-    private static final Logger LOGGER = LogManager.getLogger();
 
     public ParserCLI() {
     }
@@ -28,12 +25,11 @@ public class ParserCLI {
                 option -> option
             ));
         } catch (ParseException e) {
-            LOGGER.info(e.getMessage());
+            throw new RuntimeException();
         }
-        return null;
     }
 
-@SuppressWarnings("MultipleStringLiterals")
+    @SuppressWarnings("MultipleStringLiterals")
     private Options getOptions() {
         Options options = new Options();
         options.addOption("jar", true, "jar file");
