@@ -1,5 +1,7 @@
 package edu.project3.logReport;
 
+import java.util.Objects;
+
 public class ResponseCode {
     private final int code;
     private final String codeName;
@@ -21,5 +23,22 @@ public class ResponseCode {
 
     public Integer getIssuesCount() {
         return issuesCount;
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ResponseCode that = (ResponseCode) o;
+        return code == that.code && Objects.equals(codeName, that.codeName)
+            && Objects.equals(issuesCount, that.issuesCount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code, codeName, issuesCount);
     }
 }

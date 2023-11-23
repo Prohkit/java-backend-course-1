@@ -1,6 +1,7 @@
 package edu.project3.logReport;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Metrics {
     private final List<String> fileNames;
@@ -41,5 +42,23 @@ public class Metrics {
 
     public double getAverageResponseSize() {
         return averageResponseSize;
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Metrics metrics = (Metrics) o;
+        return Double.compare(metrics.averageResponseSize, averageResponseSize) == 0
+            && Objects.equals(fileNames, metrics.fileNames) && Objects.equals(startDate, metrics.startDate)
+            && Objects.equals(endDate, metrics.endDate) && Objects.equals(requestCount, metrics.requestCount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fileNames, startDate, endDate, requestCount, averageResponseSize);
     }
 }

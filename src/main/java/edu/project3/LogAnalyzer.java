@@ -29,8 +29,7 @@ import static java.net.http.HttpClient.newHttpClient;
 public class LogAnalyzer {
     private static final int TIME_BEFORE_REQUEST_INTERRUPTION = 10;
 
-    @SuppressWarnings("UncommentedMain")
-    public static void main(String[] args) {
+    public void analyze(String[] args) {
         LogAnalyzer logAnalyzer = new LogAnalyzer();
         LogReportGenerator logReportGenerator = new LogReportGenerator();
         ParserCLI parserCLI = new ParserCLI();
