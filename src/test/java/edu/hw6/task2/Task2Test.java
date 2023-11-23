@@ -8,6 +8,10 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 
 public class Task2Test {
     private static final Path FILE =
@@ -26,8 +30,14 @@ public class Task2Test {
 
     @Test
     void task2() {
-        Assertions.assertTrue(Files.exists(COPY));
-        Assertions.assertTrue(Files.exists(COPY_SECOND));
+        int expectedCount = 4;
+        try (Stream<Path> files = Files.list(Paths.get("./src/test/java/edu/hw6/task2").toAbsolutePath())) {
+            long count = files.count();
+            assertThat(count)
+                .isEqualTo(expectedCount);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @AfterAll
