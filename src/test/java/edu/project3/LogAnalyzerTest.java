@@ -14,7 +14,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -24,8 +23,8 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class LogAnalyzerTest {
-    private static final Path MARKDOWN_REPORT_PATH = Paths.get("src/main/java/edu/project3/report.md");
-    private static final Path ADOC_REPORT_PATH = Paths.get("src/main/java/edu/project3/report.adoc");
+    private static final Path MARKDOWN_REPORT_PATH = Paths.get("src/main/java/edu/project3/report.md").toAbsolutePath();
+    private static final Path ADOC_REPORT_PATH = Paths.get("src/main/java/edu/project3/report.adoc").toAbsolutePath();
 
     @Test
     void testLogAnalyzer() throws IOException {
@@ -99,8 +98,6 @@ public class LogAnalyzerTest {
     void testMarkdownGenerator() throws IOException {
         LogReport report = initLogReport();
         MarkdownGenerator markdownGenerator = new MarkdownGenerator();
-        markdownGenerator.generate(report);
-
         String expectedPrint = "# Общая информация  \n" +
             "| Метрика | Значение |  \n" +
             "|:-------------:|:-------------:|  \n" +
@@ -121,9 +118,9 @@ public class LogAnalyzerTest {
             "| 404 | Not Found | 2 |  \n" +
             "\n";
 
-        String printedReport = Files.readString(MARKDOWN_REPORT_PATH);
+        String markdownString = markdownGenerator.generate(report);
 
-        assertThat(printedReport)
+        assertThat(markdownString)
             .isEqualTo(expectedPrint);
     }
 
@@ -131,8 +128,6 @@ public class LogAnalyzerTest {
     void testAdocGenerator() throws IOException {
         LogReport report = initLogReport();
         AdocGenerator adocGenerator = new AdocGenerator();
-        adocGenerator.generate(report);
-
         String expectedPrint = "==== Общая информация\n" +
             "[width=\"100%\",options=\"header\", cols=\"^,^\"]\n" +
             "|===\n" +
@@ -156,9 +151,9 @@ public class LogAnalyzerTest {
             "|404|Not Found|2\n" +
             "|===\n";
 
-        String printedReport = Files.readString(ADOC_REPORT_PATH);
+        String adocString = adocGenerator.generate(report);
 
-        assertThat(printedReport)
+        assertThat(adocString)
             .isEqualTo(expectedPrint);
     }
 
