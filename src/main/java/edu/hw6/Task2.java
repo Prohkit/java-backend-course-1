@@ -22,10 +22,10 @@ public class Task2 {
     private Path getPathNameCopy(int whichCopy, Path dir, String[] baseAndExtension) {
         Path pathNameCopy;
         if (whichCopy == 1) {
-            pathNameCopy = Path.of(dir + "\\" + baseAndExtension[0] + " - копия." + baseAndExtension[1]);
+            pathNameCopy = Path.of(dir + "\\" + baseAndExtension[0] + " - copy." + baseAndExtension[1]);
         } else {
             pathNameCopy =
-                Path.of(dir + "\\" + baseAndExtension[0] + " - копия (" + whichCopy + ")." + baseAndExtension[1]);
+                Path.of(dir + "\\" + baseAndExtension[0] + " - copy (" + whichCopy + ")." + baseAndExtension[1]);
         }
         return pathNameCopy;
     }
