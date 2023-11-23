@@ -5,17 +5,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Task2 {
-    public void cloneFile(Path path) {
-        Path absolutePath = path.toAbsolutePath();
-        Path pathName = path.getFileName();
+    public void cloneFile(Path copyFrom) {
+        Path absolutePath = copyFrom.toAbsolutePath();
+        Path pathName = copyFrom.getFileName();
         String[] baseAndExtension = pathName.toString().split("\\.(?=[^\\.]+$)");
         final Path dir = absolutePath.getParent();
         int whichCopy = 0;
         boolean isFileCreated = false;
         while (!isFileCreated) {
             whichCopy++;
-            Path pathNameCopy = getPathNameCopy(whichCopy, dir, baseAndExtension);
-            isFileCreated = tryToCreateFile(pathNameCopy);
+            Path copyTo = getPathNameCopy(whichCopy, dir, baseAndExtension);
+            isFileCreated = tryToCreateFile(copyFrom, copyTo);
         }
     }
 
@@ -30,10 +30,10 @@ public class Task2 {
         return pathNameCopy;
     }
 
-    private boolean tryToCreateFile(Path pathNameCopy) {
-        if (!Files.exists(pathNameCopy)) {
+    private boolean tryToCreateFile(Path copyFrom, Path copyTo) {
+        if (!Files.exists(copyTo)) {
             try {
-                Files.createFile(pathNameCopy);
+                Files.copy(copyFrom, copyTo);
                 return true;
             } catch (IOException e) {
                 throw new RuntimeException();

@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class Task2Test {
-    private static final Path FILE_TO_COPY = Paths.get("./src/test/java/edu/hw6/task2/Tinkoff Bank Biggest Secret.txt");
-    private static final Path COPY = Paths.get("./src/test/java/edu/hw6/task2/Tinkoff Bank Biggest Secret - копия.txt");
+    private static final Path FILE_TO_COPY = Paths.get("src/test/java/edu/hw6/task2/Tinkoff Bank Biggest Secret.txt");
+    private static final Path COPY = Paths.get("src/test/java/edu/hw6/task2/Tinkoff Bank Biggest Secret - копия.txt");
 
     @Test
     void task2() {
