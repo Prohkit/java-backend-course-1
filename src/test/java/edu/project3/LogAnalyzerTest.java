@@ -89,7 +89,7 @@ public class LogAnalyzerTest {
 
         LogReport expectedLogReport = initLogReport();
 
-        LogReport logReport = logReportGenerator.generateLogReport(logRecords, parsedArgs, new ArrayList<>());
+        LogReport logReport = logReportGenerator.generateLogReport(logRecords, parsedArgs, List.of("logs.txt"));
 
         assertThat(logReport)
             .isEqualTo(expectedLogReport);
@@ -104,7 +104,7 @@ public class LogAnalyzerTest {
         String expectedPrint = "# Общая информация  \n" +
             "| Метрика | Значение |  \n" +
             "|:-------------:|:-------------:|  \n" +
-            "| Файлы |  |  \n" +
+            "| Файлы | [logs.txt] |  \n" +
             "| Начальная Дата | 2023-08-31 |  \n" +
             "| Конечная Дата | - |  \n" +
             "| Количество запросов | 2 |  \n" +
@@ -137,7 +137,7 @@ public class LogAnalyzerTest {
             "[width=\"100%\",options=\"header\", cols=\"^,^\"]\n" +
             "|===\n" +
             "|Метрика |Значение\n" +
-            "|Файлы: |\n" +
+            "|Файлы: |logs.txt,\n" +
             "|Начальная Дата |2023-08-31\n" +
             "|Конечная Дата |-\n" +
             "|Количество запросов |2\n" +
@@ -172,7 +172,7 @@ public class LogAnalyzerTest {
         String expectedPrint = "# Общая информация  \n" +
             "| Метрика | Значение |  \n" +
             "|:-------------:|:-------------:|  \n" +
-            "| Файлы |  |  \n" +
+            "| Файлы | [logs.txt] |  \n" +
             "| Начальная Дата | 2023-08-31 |  \n" +
             "| Конечная Дата | - |  \n" +
             "| Количество запросов | 2 |  \n" +
@@ -206,7 +206,7 @@ public class LogAnalyzerTest {
             "[width=\"100%\",options=\"header\", cols=\"^,^\"]\n" +
             "|===\n" +
             "|Метрика |Значение\n" +
-            "|Файлы: |\n" +
+            "|Файлы: |logs.txt,\n" +
             "|Начальная Дата |2023-08-31\n" +
             "|Конечная Дата |-\n" +
             "|Количество запросов |2\n" +
@@ -241,7 +241,7 @@ public class LogAnalyzerTest {
     }
 
     private LogReport initLogReport() {
-        Metrics metrics = new Metrics(new ArrayList<>(), "2023-08-31", null, 2, 324);
+        Metrics metrics = new Metrics(List.of("logs.txt"), "2023-08-31", null, 2, 324);
         List<RequestedResource> requestedResources =
             List.of(new RequestedResource("GET /downloads/product_1 HTTP/1.1", 2));
         List<ResponseCode> responseCodes = List.of(new ResponseCode(404, "Not Found", 2));
