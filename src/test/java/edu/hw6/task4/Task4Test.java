@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class Task4Test {
-    private static final Path PATH = Paths.get("./src/test/java/edu/hw6/task4/file.txt");
+    private static final Path PATH = Paths.get("src/test/java/edu/hw6/task4/file.txt");
 
     @Test
     void task4() throws IOException {

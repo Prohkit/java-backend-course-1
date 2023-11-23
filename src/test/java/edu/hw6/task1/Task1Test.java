@@ -13,7 +13,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class Task1Test {
 
     private static DiskMap diskMap;
-    private static final Path PATH = Paths.get("./src/test/java/edu/hw6/task1/diskMap.txt");
+    private static final Path PATH = Paths.get("src/test/java/edu/hw6/task1/diskMap.txt");
 
     @BeforeAll
     static void init() {

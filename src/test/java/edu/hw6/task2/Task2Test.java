@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class Task2Test {
-    private static final Path FILE_TO_COPY = Paths.get("./src/test/java/edu/hw6/task2/Tinkoff Bank Biggest Secret.txt");
+    private static final Path FILE_TO_COPY = Paths.get("src/test/java/edu/hw6/task2/Tinkoff Bank Biggest Secret.txt");
 
     @Test
     void task2() {
@@ -20,9 +20,9 @@ public class Task2Test {
             task2.cloneFile(FILE_TO_COPY);
             Path copy;
             if (i == 1) {
-                copy = Paths.get("./src/test/java/edu/hw6/task2/Tinkoff Bank Biggest Secret - копия.txt");
+                copy = Paths.get("src/test/java/edu/hw6/task2/Tinkoff Bank Biggest Secret - копия.txt");
             } else {
-                copy = Paths.get("./src/test/java/edu/hw6/task2/Tinkoff Bank Biggest Secret - копия (" + i + ").txt");
+                copy = Paths.get("src/test/java/edu/hw6/task2/Tinkoff Bank Biggest Secret - копия (" + i + ").txt");
             }
             assertThat(Files.exists(copy))
                 .isTrue();
@@ -34,9 +34,9 @@ public class Task2Test {
         for (int i = 1; i <= 5; i++) {
             Path toDelete;
             if (i == 1) {
-                toDelete = Paths.get("./src/test/java/edu/hw6/task2/Tinkoff Bank Biggest Secret - копия.txt");
+                toDelete = Paths.get("src/test/java/edu/hw6/task2/Tinkoff Bank Biggest Secret - копия.txt");
             } else {
-                toDelete = Paths.get("./src/test/java/edu/hw6/task2/Tinkoff Bank Biggest Secret - копия (" + i + ").txt");
+                toDelete = Paths.get("src/test/java/edu/hw6/task2/Tinkoff Bank Biggest Secret - копия (" + i + ").txt");
             }
             Files.deleteIfExists(toDelete);
         }

@@ -15,7 +15,7 @@ import static edu.hw6.task3.Filters.regexContains;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class Task3Test {
-    private static final Path PATH = Paths.get("./src/test/java/edu/hw6/task3/files");
+    private static final Path PATH = Paths.get("src/test/java/edu/hw6/task3/files");
 
     @Test
     void task3() throws IOException {
