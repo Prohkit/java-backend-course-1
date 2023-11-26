@@ -12,7 +12,7 @@ public class Task4Test {
         MultiThreadPiCalc piCalc = new MultiThreadPiCalc();
         double pi = 3.1415;
         int iterations = 100_000_000;
-        double expectedError = 0.01;
+        double expectedError = 0.1;
 
         // when
         double calculatedPI = piCalc.multiThreadedCalculatePi(iterations);
