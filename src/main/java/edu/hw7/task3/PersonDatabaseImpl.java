@@ -1,6 +1,7 @@
 package edu.hw7.task3;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,24 +11,19 @@ public class PersonDatabaseImpl implements PersonDatabase {
     private final Map<String, List<Person>> personAddresses;
     private final Map<String, List<Person>> personPhones;
 
-    public PersonDatabaseImpl(
-        Map<Integer, Person> personMap,
-        Map<String, List<Person>> personNames,
-        Map<String, List<Person>> personAddresses,
-        Map<String, List<Person>> personPhones
-    ) {
-        this.personMap = personMap;
-        this.personNames = personNames;
-        this.personAddresses = personAddresses;
-        this.personPhones = personPhones;
+    public PersonDatabaseImpl() {
+        this.personMap = new HashMap<>();
+        this.personNames = new HashMap<>();
+        this.personAddresses = new HashMap<>();
+        this.personPhones = new HashMap<>();
     }
 
     @Override
     public synchronized void add(Person person) {
-        personMap.put(person.getId(), person);
-        personNames.computeIfAbsent(person.getName(), k -> new ArrayList<>()).add(person);
-        personNames.computeIfAbsent(person.getAddress(), k -> new ArrayList<>()).add(person);
-        personNames.computeIfAbsent(person.getPhoneNumber(), k -> new ArrayList<>()).add(person);
+        personMap.put(person.id(), person);
+        personNames.computeIfAbsent(person.name(), k -> new ArrayList<>()).add(person);
+        personNames.computeIfAbsent(person.address(), k -> new ArrayList<>()).add(person);
+        personNames.computeIfAbsent(person.phoneNumber(), k -> new ArrayList<>()).add(person);
 
     }
 
@@ -35,9 +31,9 @@ public class PersonDatabaseImpl implements PersonDatabase {
     public synchronized void delete(int id) {
         Person person = personMap.get(id);
         if (person != null) {
-            personNames.get(person.getName()).remove(person);
-            personAddresses.get(person.getAddress()).remove(person);
-            personPhones.get(person.getPhoneNumber()).remove(person);
+            personNames.get(person.name()).remove(person);
+            personAddresses.get(person.address()).remove(person);
+            personPhones.get(person.phoneNumber()).remove(person);
         }
         personMap.remove(id);
     }
