@@ -5,17 +5,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Pixel {
     private static final Random random = new Random();
-    private final int x;
-    private final int y;
     private int red;
     private int green;
     private int blue;
     private int hitCount;
     private double normal;
 
-    public Pixel(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public Pixel() {
         this.red = 0;
         this.green = 0;
         this.blue = 0;
