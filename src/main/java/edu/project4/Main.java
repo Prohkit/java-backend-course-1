@@ -1,6 +1,7 @@
 package edu.project4;
 
 import edu.project4.Transformations.PolarTransformation;
+import edu.project4.Transformations.Transformation;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -22,8 +23,8 @@ public class Main {
         createIMG(fractalImage);
     }
 
-    public static FractalImage render(int n, int eqCount, int it, int xRes, int yRes) {
-        FractalImage fractalImage = FractalImage.create(xRes, yRes);
+    public static FractalImage render(int n, int eqCount, int it, int width, int height) {
+        FractalImage fractalImage = FractalImage.create(width, height);
         Random random = new Random();
         // Генерируем eqCount аффинных преобразований со стартовыми цветами;
         List<AffineTransformation> affineTransformations = generateAffineTransformations(eqCount);
@@ -36,48 +37,64 @@ public class Main {
             double yMin = -1;
             double yMax = 1;
             //В этом случае в большинстве нелинейных преобразований с боков не будет оставаться черных областей
-            double newX = ThreadLocalRandom.current().nextDouble(xMin, xMax);
-            double newY = ThreadLocalRandom.current().nextDouble(yMin, xMax);
+            Point newPoint = new Point(
+                ThreadLocalRandom.current().nextDouble(xMin, xMax),
+                ThreadLocalRandom.current().nextDouble(yMin, xMax)
+            );
             //Первые 20 итераций точку не рисуем, т.к. сначала надо найти начальную
             for (int step = -20; step < it; step++) {
                 //Выбираем одно из аффинных преобразований
                 int i = ThreadLocalRandom.current().nextInt(0, eqCount);
+                AffineTransformation affineTransformation = affineTransformations.get(i);
                 //и применяем его
-                double x = affineTransformations.get(i).getA() * newX + affineTransformations.get(i).getB() * newY +
-                    affineTransformations.get(i).getC();
-                double y = affineTransformations.get(i).getD() * newX + affineTransformations.get(i).getE() * newY +
-                    affineTransformations.get(i).getF();
+                Point pointWithAffineTransformation = new Point(
+                    affineTransformation.getA() * newPoint.getX() + affineTransformation.getB() * newPoint.getY() +
+                        affineTransformation.getC(),
+                    affineTransformation.getD() * newPoint.getX() + affineTransformation.getE() * newPoint.getY() +
+                        affineTransformation.getF()
+                );
 
                 // Применяем нелинейное преобразование;
-                PolarTransformation polarTransformation = new PolarTransformation();
-                newX = polarTransformation.getNewX(x, y);
-                newY = polarTransformation.getNewY(x, y);
+                //
+                Transformation polarTransformation = new PolarTransformation();
+                newPoint = polarTransformation.apply(pointWithAffineTransformation);
 
-                if (step >= 0 && (newX >= -1 && newX <= 1) && (newY >= -1 && newY <= 1)) {
+                boolean isNewXBetweenXMinAndXMax = newPoint.getX() >= xMin && newPoint.getX() <= xMax;
+                boolean isNewXBetweenYMinAndYMax = newPoint.getY() >= yMin && newPoint.getY() <= yMax;
+                if (step >= 0 && isNewXBetweenXMinAndXMax && isNewXBetweenYMinAndYMax) {
                     //Вычисляем координаты точки, а затем задаем цвет
                     //Trunc??
-                    int x1 = (int) (xRes - (((xMax - newX) / (xMax - xMin)) * xRes));
-                    int y1 = (int) (yRes - (((yMax - newY) / (yMax - yMin)) * yRes));
+                    Coordinate coordinate = new Coordinate(
+                        (int) (width - (((xMax - newPoint.getX()) / (xMax - xMin)) * width)),
+                        (int) (height - (((yMax - newPoint.getY()) / (yMax - yMin)) * height))
+                    );
+
                     //Если точка попала в область изображения
-                    if (x1 < xRes && y1 < yRes) {
+                    if (coordinate.getX() < width && coordinate.getY() < height) {
                         //то проверяем, первый ли раз попали в нее
-                        if (fractalImage.getPixel(x1, y1).getHitCount() == 0) {
+                        if (fractalImage.getPixel(coordinate.getX(), coordinate.getY()).getHitCount() == 0) {
                             //Попали в первый раз, берем стартовый цвет у соответствующего аффинного преобразования
-                            fractalImage.getPixel(x1, y1).setRed(affineTransformations.get(i).getRed());
-                            fractalImage.getPixel(x1, y1).setGreen(affineTransformations.get(i).getGreen());
-                            fractalImage.getPixel(x1, y1).setBlue(affineTransformations.get(i).getBlue());
+                            fractalImage.getPixel(coordinate.getX(), coordinate.getY())
+                                .setRed(affineTransformation.getRed());
+                            fractalImage.getPixel(coordinate.getX(), coordinate.getY())
+                                .setGreen(affineTransformation.getGreen());
+                            fractalImage.getPixel(coordinate.getX(), coordinate.getY())
+                                .setBlue(affineTransformation.getBlue());
                         } else {
                             //Попали не в первый раз, считаем так:
-                            fractalImage.getPixel(x1, y1).setRed(
-                                (fractalImage.getPixel(x1, y1).getRed() + affineTransformations.get(i).getRed()) / 2);
-                            fractalImage.getPixel(x1, y1).setGreen(
-                                (fractalImage.getPixel(x1, y1).getGreen() + affineTransformations.get(i).getGreen()) /
+                            fractalImage.getPixel(coordinate.getX(), coordinate.getY()).setRed(
+                                (fractalImage.getPixel(coordinate.getX(), coordinate.getY()).getRed() +
+                                    affineTransformation.getRed()) / 2);
+                            fractalImage.getPixel(coordinate.getX(), coordinate.getY()).setGreen(
+                                (fractalImage.getPixel(coordinate.getX(), coordinate.getY()).getGreen() +
+                                    affineTransformation.getGreen()) /
                                     2);
-                            fractalImage.getPixel(x1, y1).setBlue(
-                                (fractalImage.getPixel(x1, y1).getBlue() + affineTransformations.get(i).getBlue()) / 2);
+                            fractalImage.getPixel(coordinate.getX(), coordinate.getY()).setBlue(
+                                (fractalImage.getPixel(coordinate.getX(), coordinate.getY()).getBlue() +
+                                    affineTransformation.getBlue()) / 2);
                         }
                         //Увеличиваем счетчик точки на единицу
-                        fractalImage.getPixel(x1, y1).incrementHitCount();
+                        fractalImage.getPixel(coordinate.getX(), coordinate.getY()).incrementHitCount();
                     }
                 }
             }

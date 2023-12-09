@@ -1,14 +1,19 @@
 package edu.project4.Transformations;
 
-import java.util.Random;
+import edu.project4.Point;
 
-public class SinusoidalTransformation {
+public class SinusoidalTransformation implements Transformation {
 
-    public double getNewX(double x) {
+    private double getNewX(double x) {
         return Math.sin(x);
     }
 
-    public double getNewY(double y) {
+    private double getNewY(double y) {
         return Math.sin(y);
+    }
+
+    @Override
+    public Point apply(Point point) {
+        return new Point(getNewX(point.getX()), getNewY(point.getY()));
     }
 }
