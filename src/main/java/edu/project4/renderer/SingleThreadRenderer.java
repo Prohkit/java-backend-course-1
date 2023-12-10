@@ -1,8 +1,9 @@
-package edu.project4.renderers;
+package edu.project4.renderer;
 
 import edu.project4.model.FractalImage;
-import edu.project4.transformations.AffineTransformation;
-import edu.project4.transformations.Transformation;
+import edu.project4.model.SymmetryType;
+import edu.project4.transformation.AffineTransformation;
+import edu.project4.transformation.Transformation;
 import java.util.List;
 
 public class SingleThreadRenderer extends Renderer {
@@ -13,10 +14,13 @@ public class SingleThreadRenderer extends Renderer {
         List<AffineTransformation> affineTransformations,
         List<Transformation> variations,
         int samples,
-        int iterPerSample
+        int iterPerSample,
+        SymmetryType symmetryType
     ) {
         for (int num = 0; num < samples; num++) {
             iterate(fractalImage, variations, affineTransformations, iterPerSample);
         }
+        doCorrectionToFractalImage(fractalImage);
+        makeFractalImageSymmetrical(fractalImage, symmetryType);
     }
 }

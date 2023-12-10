@@ -36,6 +36,12 @@ public class FractalImage {
         return null;
     }
 
+    public void setPixel(Pixel pixel, int x, int y) {
+        if (contains(x, y)) {
+            pixels[x][y] = pixel;
+        }
+    }
+
     public int getWidth() {
         return width;
     }

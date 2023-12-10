@@ -1,10 +1,11 @@
-package edu.project4.renderers;
+package edu.project4.renderer;
 
 import edu.project4.model.Coordinate;
 import edu.project4.model.FractalImage;
 import edu.project4.model.Point;
-import edu.project4.transformations.AffineTransformation;
-import edu.project4.transformations.Transformation;
+import edu.project4.model.SymmetryType;
+import edu.project4.transformation.AffineTransformation;
+import edu.project4.transformation.Transformation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -21,7 +22,8 @@ public abstract class Renderer {
         List<AffineTransformation> affineTransformations,
         List<Transformation> variations,
         int samples,
-        int iterPerSample
+        int iterPerSample,
+        SymmetryType symmetryType
     );
 
     protected void iterate(
@@ -129,7 +131,7 @@ public abstract class Renderer {
     }
 
     @SuppressWarnings("MagicNumber")
-    public void doCorrectionToFractalImage(FractalImage fractalImage) {
+    protected void doCorrectionToFractalImage(FractalImage fractalImage) {
         int width = fractalImage.getWidth();
         int height = fractalImage.getHeight();
         double max = 0.0;
@@ -185,5 +187,56 @@ public abstract class Renderer {
             affineTransformations.add(new AffineTransformation());
         }
         return affineTransformations;
+    }
+
+    protected void makeFractalImageSymmetrical(
+        FractalImage fractalImage,
+        SymmetryType symmetryType
+    ) {
+        switch (symmetryType) {
+            case CENTRAL -> makeFractalImageSymmetricalCentral(fractalImage);
+            case HORIZONTAL -> makeFractalImageSymmetricalHorizontally(fractalImage);
+            case VERTICAL -> makeFractalImageSymmetricalVertically(fractalImage);
+            default -> {
+            }
+        }
+    }
+
+    private void makeFractalImageSymmetricalCentral(FractalImage fractalImage) {
+        for (int x = 0; x < fractalImage.getWidth() / 2; x++) {
+            for (int y = 0; y < fractalImage.getHeight() / 2; y++) {
+                fractalImage.setPixel(fractalImage.getPixel(x, y), fractalImage.getWidth() - x,
+                    fractalImage.getHeight() - y
+                );
+
+                fractalImage.setPixel(fractalImage.getPixel(x, y), x,
+                    fractalImage.getHeight() - y
+                );
+
+                fractalImage.setPixel(fractalImage.getPixel(x, y), fractalImage.getWidth() - x,
+                    y
+                );
+            }
+        }
+    }
+
+    private void makeFractalImageSymmetricalHorizontally(FractalImage fractalImage) {
+        for (int x = 0; x < fractalImage.getWidth(); x++) {
+            for (int y = 0; y < fractalImage.getHeight() / 2; y++) {
+                fractalImage.setPixel(fractalImage.getPixel(x, y), x,
+                    fractalImage.getHeight() - y
+                );
+            }
+        }
+    }
+
+    private void makeFractalImageSymmetricalVertically(FractalImage fractalImage) {
+        for (int x = 0; x < fractalImage.getHeight(); x++) {
+            for (int y = 0; y < fractalImage.getWidth() / 2; y++) {
+                fractalImage.setPixel(fractalImage.getPixel(x, y), fractalImage.getWidth() - x,
+                    y
+                );
+            }
+        }
     }
 }
