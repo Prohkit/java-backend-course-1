@@ -7,15 +7,41 @@ import edu.project4.transformations.AffineTransformation;
 import edu.project4.transformations.Transformation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class SingleThreadRenderer {
+public class MultiThreadRenderer {
+    private static final ReadWriteLock LOCK = new ReentrantReadWriteLock();
     private static final double xMin = -1.777;
     private static final double xMax = 1.777;
     private static final double yMin = -1;
     private static final double yMax = 1;
 
     public void render(
+        FractalImage fractalImage,
+        List<AffineTransformation> affineTransformations,
+        List<Transformation> variations,
+        int samples,
+        int iterPerSample
+    ) {
+        int threadCount = Runtime.getRuntime().availableProcessors();
+        int samplesPerThread = samples / threadCount;
+        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
+        executorService.execute(() ->
+            multiThreadRender(
+                fractalImage,
+                affineTransformations,
+                variations,
+                samplesPerThread,
+                iterPerSample
+            ));
+        executorService.close();
+    }
+
+    private void multiThreadRender(
         FractalImage fractalImage,
         List<AffineTransformation> affineTransformations,
         List<Transformation> variations,
@@ -47,9 +73,22 @@ public class SingleThreadRenderer {
                 boolean isTheCoordinateEnteredToTheImage =
                     coordinate.getX() < fractalImage.getWidth() && coordinate.getY() < fractalImage.getHeight();
                 if (isTheCoordinateEnteredToTheImage) {
-                    processPixel(fractalImage, coordinate, affineTransformation);
+                   processPixelWithLock(fractalImage, coordinate, affineTransformation);
                 }
             }
+        }
+    }
+
+    private void processPixelWithLock(
+        FractalImage fractalImage,
+        Coordinate coordinate,
+        AffineTransformation affineTransformation
+    ) {
+        LOCK.writeLock().lock();
+        try {
+            processPixel(fractalImage, coordinate, affineTransformation);
+        } finally {
+            LOCK.writeLock().unlock();
         }
     }
 
@@ -101,12 +140,8 @@ public class SingleThreadRenderer {
         Point newPoint
     ) {
         return new Coordinate(
-            (int) (fractalImage.getWidth() -
-                (((SingleThreadRenderer.xMax - newPoint.getX()) / (SingleThreadRenderer.xMax -
-                    SingleThreadRenderer.xMin)) * fractalImage.getWidth())),
-            (int) (fractalImage.getHeight() - (((SingleThreadRenderer.yMax - newPoint.getY()) / (
-                SingleThreadRenderer.yMax - SingleThreadRenderer.yMin)) *
-                fractalImage.getHeight()))
+            (int) (fractalImage.getWidth() - (((xMax - newPoint.getX()) / (xMax - xMin)) * fractalImage.getWidth())),
+            (int) (fractalImage.getHeight() - (((yMax - newPoint.getY()) / (yMax - yMin)) * fractalImage.getHeight()))
         );
     }
 
@@ -130,8 +165,8 @@ public class SingleThreadRenderer {
 
     private Point getNewPoint() {
         return new Point(
-            ThreadLocalRandom.current().nextDouble(SingleThreadRenderer.xMin, SingleThreadRenderer.xMax),
-            ThreadLocalRandom.current().nextDouble(SingleThreadRenderer.yMin, SingleThreadRenderer.yMax)
+            ThreadLocalRandom.current().nextDouble(xMin, xMax),
+            ThreadLocalRandom.current().nextDouble(yMin, yMax)
         );
     }
 

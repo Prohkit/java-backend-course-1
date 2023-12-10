@@ -1,37 +1,37 @@
-package edu.project4;
+package edu.project4.model;
 
 import java.util.Objects;
 
-public class Point {
-    private double x;
-    private double y;
+public class Coordinate {
+    private int x;
+    private int y;
 
-    public Point(double x, double y) {
+    public Coordinate(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public double getX() {
+    public int getX() {
         return x;
     }
 
-    public void setX(double x) {
+    public void setX(int x) {
         this.x = x;
     }
 
-    public double getY() {
+    public int getY() {
         return y;
     }
 
-    public void setY(double y) {
+    public void setY(int y) {
         this.y = y;
     }
 
     @Override public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Point point = (Point) o;
-        return x == point.x && y == point.y;
+        Coordinate that = (Coordinate) o;
+        return x == that.x && y == that.y;
     }
 
     @Override

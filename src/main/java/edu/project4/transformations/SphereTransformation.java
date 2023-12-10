@@ -1,6 +1,6 @@
 package edu.project4.transformations;
 
-import edu.project4.Point;
+import edu.project4.model.Point;
 
 public class SphereTransformation implements Transformation {
     private double getNewX(double x, double y) {

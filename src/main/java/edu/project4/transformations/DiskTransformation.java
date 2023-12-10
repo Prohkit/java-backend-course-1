@@ -1,6 +1,6 @@
 package edu.project4.transformations;
 
-import edu.project4.Point;
+import edu.project4.model.Point;
 import static java.lang.Math.PI;
 import static java.lang.Math.atan;
 import static java.lang.Math.cos;

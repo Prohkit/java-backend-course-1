@@ -1,4 +1,4 @@
-package edu.project4;
+package edu.project4.model;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;

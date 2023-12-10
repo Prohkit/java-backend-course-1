@@ -1,4 +1,4 @@
-package edu.project4;
+package edu.project4.model;
 
 public class FractalImage {
     private final Pixel[][] pixels;

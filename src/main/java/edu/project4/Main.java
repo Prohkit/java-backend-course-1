@@ -1,22 +1,19 @@
 package edu.project4;
 
+import edu.project4.model.FractalImage;
+import edu.project4.renderers.MultiThreadRenderer;
 import edu.project4.renderers.SingleThreadRenderer;
 import edu.project4.saver.ImageFormat;
 import edu.project4.saver.ImageUtils;
+import edu.project4.transformations.AffineTransformation;
 import edu.project4.transformations.DiskTransformation;
 import edu.project4.transformations.HeartTransformation;
 import edu.project4.transformations.PolarTransformation;
 import edu.project4.transformations.SinusoidalTransformation;
 import edu.project4.transformations.SphereTransformation;
 import edu.project4.transformations.Transformation;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
-import javax.imageio.ImageIO;
 
 public class Main {
     public static void main(String[] args) {
@@ -25,8 +22,9 @@ public class Main {
         int eqCount = 25;
 
         FractalImage fractalImage = FractalImage.create(width, height);
-        SingleThreadRenderer renderer = new SingleThreadRenderer();
-        List<AffineTransformation> affineTransformations = renderer.generateAffineTransformations(eqCount);
+        FractalImage fractalImageMulti = FractalImage.create(width, height);
+        SingleThreadRenderer singleThreadRenderer = new SingleThreadRenderer();
+        List<AffineTransformation> affineTransformations = singleThreadRenderer.generateAffineTransformations(eqCount);
         List<Transformation> transformations = List.of(
             new DiskTransformation(),
             new HeartTransformation(),
@@ -34,8 +32,18 @@ public class Main {
             new PolarTransformation(),
             new SphereTransformation()
         );
-        renderer.render(fractalImage, affineTransformations, transformations, 100000, 50);
-        renderer.doCorrectionToFractalImage(fractalImage);
-        ImageUtils.save(fractalImage, Path.of("asdf"), ImageFormat.BMP);
+        long a = System.currentTimeMillis();
+        singleThreadRenderer.render(fractalImage, affineTransformations, transformations, 1000000, 50);
+        long b = System.currentTimeMillis();
+        MultiThreadRenderer multiThreadRenderer = new MultiThreadRenderer();
+        long c = System.currentTimeMillis();
+        multiThreadRenderer.render(fractalImageMulti, affineTransformations, transformations, 1000000, 50);
+        long d = System.currentTimeMillis();
+        System.out.println(b - a);
+        System.out.println(d - c);
+        singleThreadRenderer.doCorrectionToFractalImage(fractalImage);
+        multiThreadRenderer.doCorrectionToFractalImage(fractalImageMulti);
+        ImageUtils.save(fractalImage, Path.of("single"), ImageFormat.JPEG);
+        ImageUtils.save(fractalImageMulti, Path.of("multi"), ImageFormat.JPEG);
     }
 }

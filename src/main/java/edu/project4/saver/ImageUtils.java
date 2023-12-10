@@ -1,7 +1,7 @@
 package edu.project4.saver;
 
-import edu.project4.FractalImage;
-import edu.project4.Pixel;
+import edu.project4.model.FractalImage;
+import edu.project4.model.Pixel;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
