@@ -21,8 +21,8 @@ public class Test {
     private static final int WIDTH = 1920;
     private static final int HEIGHT = 1080;
     private static final int EQ_COUNT = 25;
-    private static final int SAMPLES = 100000;
-    private static final int ITERATIONS = 50;
+    private static final int SAMPLES = 1000000;
+    private static final int ITERATIONS = 100;
     private static final Logger LOGGER = LogManager.getLogger();
 
     @org.junit.jupiter.api.Test
