@@ -2,9 +2,10 @@ package edu.project4.transformations;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+@SuppressWarnings("MagicNumber")
 public class AffineTransformation {
-    private static final int coefFrom = -1;
-    private static final int coefTo = 1;
+    private static final int COEFFICIENT_FROM = -1;
+    private static final int COEFFICIENT_TO = 1;
     private double a;
     private double b;
     private double c;
@@ -26,15 +27,15 @@ public class AffineTransformation {
 
     private void generateCoefficients() {
         while (true) {
-            double a = ThreadLocalRandom.current().nextDouble(coefFrom, coefTo);
-            double b = ThreadLocalRandom.current().nextDouble(coefFrom, coefTo);
-            double d = ThreadLocalRandom.current().nextDouble(coefFrom, coefTo);
-            double e = ThreadLocalRandom.current().nextDouble(coefFrom, coefTo);
-            if (areCoefficientsCorrect(a, b, d, e)) {
-                this.a = a;
-                this.b = b;
-                this.d = d;
-                this.e = e;
+            double randomA = ThreadLocalRandom.current().nextDouble(COEFFICIENT_FROM, COEFFICIENT_TO);
+            double randomB = ThreadLocalRandom.current().nextDouble(COEFFICIENT_FROM, COEFFICIENT_TO);
+            double randomD = ThreadLocalRandom.current().nextDouble(COEFFICIENT_FROM, COEFFICIENT_TO);
+            double randomE = ThreadLocalRandom.current().nextDouble(COEFFICIENT_FROM, COEFFICIENT_TO);
+            if (areCoefficientsCorrect(randomA, randomB, randomD, randomE)) {
+                this.a = randomA;
+                this.b = randomB;
+                this.d = randomD;
+                this.e = randomE;
                 break;
             }
         }

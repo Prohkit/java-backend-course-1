@@ -10,10 +10,11 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Renderer {
-    private static final double xMin = -1.777;
-    private static final double xMax = 1.777;
-    private static final double yMin = -1;
-    private static final double yMax = 1;
+    private static final double X_MIN = -1.777;
+    private static final double X_MAX = 1.777;
+    private static final double Y_MIN = -1;
+    private static final double Y_MAX = 1;
+    private static final int OFFSET = -20;
 
     public abstract void render(
         FractalImage fractalImage,
@@ -30,14 +31,14 @@ public abstract class Renderer {
         int iterPerSample
     ) {
         Point newPoint = getNewPoint();
-        for (int step = -20; step < iterPerSample; step++) {
+        for (int step = OFFSET; step < iterPerSample; step++) {
             AffineTransformation affineTransformation = getAffineTransformation(affineTransformations);
             Point pointWithAffineTransformation = applyAffineTransformation(affineTransformation, newPoint);
             Transformation transformation = getNonLinearTransformation(variations);
             newPoint = transformation.apply(pointWithAffineTransformation);
 
-            boolean isNewXBetweenXMinAndXMax = newPoint.getX() >= xMin && newPoint.getX() <= xMax;
-            boolean isNewXBetweenYMinAndYMax = newPoint.getY() >= yMin && newPoint.getY() <= yMax;
+            boolean isNewXBetweenXMinAndXMax = newPoint.getX() >= X_MIN && newPoint.getX() <= X_MAX;
+            boolean isNewXBetweenYMinAndYMax = newPoint.getY() >= Y_MIN && newPoint.getY() <= Y_MAX;
             if (step >= 0 && isNewXBetweenXMinAndXMax && isNewXBetweenYMinAndYMax) {
                 Coordinate coordinate = getPointCoordinate(fractalImage, newPoint);
                 boolean isTheCoordinateEnteredToTheImage =
@@ -68,15 +69,14 @@ public abstract class Renderer {
         AffineTransformation affineTransformation
     ) {
         fractalImage.getPixel(coordinate.getX(), coordinate.getY()).setRed(
-            (fractalImage.getPixel(coordinate.getX(), coordinate.getY()).getRed() +
-                affineTransformation.getRed()) / 2);
+            (fractalImage.getPixel(coordinate.getX(), coordinate.getY()).getRed()
+                + affineTransformation.getRed()) / 2);
         fractalImage.getPixel(coordinate.getX(), coordinate.getY()).setGreen(
-            (fractalImage.getPixel(coordinate.getX(), coordinate.getY()).getGreen() +
-                affineTransformation.getGreen()) /
-                2);
+            (fractalImage.getPixel(coordinate.getX(), coordinate.getY()).getGreen()
+                + affineTransformation.getGreen()) / 2);
         fractalImage.getPixel(coordinate.getX(), coordinate.getY()).setBlue(
-            (fractalImage.getPixel(coordinate.getX(), coordinate.getY()).getBlue() +
-                affineTransformation.getBlue()) / 2);
+            (fractalImage.getPixel(coordinate.getX(), coordinate.getY()).getBlue()
+                + affineTransformation.getBlue()) / 2);
     }
 
     protected void setColorsFirstTime(
@@ -97,12 +97,9 @@ public abstract class Renderer {
         Point newPoint
     ) {
         return new Coordinate(
-            (int) (fractalImage.getWidth() -
-                (((xMax - newPoint.getX()) / (xMax -
-                    xMin)) * fractalImage.getWidth())),
-            (int) (fractalImage.getHeight() - (((yMax - newPoint.getY()) / (
-                yMax - yMin)) *
-                fractalImage.getHeight()))
+            (int) (fractalImage.getWidth() - (((X_MAX - newPoint.getX()) / (X_MAX - X_MIN)) * fractalImage.getWidth())),
+            (int) (fractalImage.getHeight()
+                - (((Y_MAX - newPoint.getY()) / (Y_MAX - Y_MIN)) * fractalImage.getHeight()))
         );
     }
 
@@ -113,10 +110,10 @@ public abstract class Renderer {
     protected Point applyAffineTransformation(AffineTransformation affineTransformation, Point newPoint) {
         //и применяем его
         return new Point(
-            affineTransformation.getA() * newPoint.getX() + affineTransformation.getB() * newPoint.getY() +
-                affineTransformation.getC(),
-            affineTransformation.getD() * newPoint.getX() + affineTransformation.getE() * newPoint.getY() +
-                affineTransformation.getF()
+            affineTransformation.getA() * newPoint.getX() + affineTransformation.getB() * newPoint.getY()
+                + affineTransformation.getC(),
+            affineTransformation.getD() * newPoint.getX() + affineTransformation.getE() * newPoint.getY()
+                + affineTransformation.getF()
         );
     }
 
@@ -126,11 +123,12 @@ public abstract class Renderer {
 
     protected Point getNewPoint() {
         return new Point(
-            ThreadLocalRandom.current().nextDouble(xMin, xMax),
-            ThreadLocalRandom.current().nextDouble(yMin, yMax)
+            ThreadLocalRandom.current().nextDouble(X_MIN, X_MAX),
+            ThreadLocalRandom.current().nextDouble(Y_MIN, Y_MAX)
         );
     }
 
+    @SuppressWarnings("MagicNumber")
     public void doCorrectionToFractalImage(FractalImage fractalImage) {
         int width = fractalImage.getWidth();
         int height = fractalImage.getHeight();
@@ -148,9 +146,7 @@ public abstract class Renderer {
         }
         for (int row = 0; row < width; row++) {
             for (int col = 0; col < height; col++) {
-                {
-                    doGammaCorrection(fractalImage, row, col, max, gamma);
-                }
+                doGammaCorrection(fractalImage, row, col, max, gamma);
             }
         }
     }
@@ -171,16 +167,16 @@ public abstract class Renderer {
             .setNormal(fractalImage.getPixel(row, col).getNormal() / max);
 
         fractalImage.getPixel(row, col)
-            .setRed((int) (fractalImage.getPixel(row, col).getRed() *
-                Math.pow(fractalImage.getPixel(row, col).getNormal(), (1.0 / gamma))));
+            .setRed((int) (fractalImage.getPixel(row, col).getRed()
+                * Math.pow(fractalImage.getPixel(row, col).getNormal(), (1.0 / gamma))));
 
         fractalImage.getPixel(row, col)
-            .setGreen((int) (fractalImage.getPixel(row, col).getGreen() *
-                Math.pow(fractalImage.getPixel(row, col).getNormal(), (1.0 / gamma))));
+            .setGreen((int) (fractalImage.getPixel(row, col).getGreen()
+                * Math.pow(fractalImage.getPixel(row, col).getNormal(), (1.0 / gamma))));
 
         fractalImage.getPixel(row, col)
-            .setBlue((int) (fractalImage.getPixel(row, col).getBlue() *
-                Math.pow(fractalImage.getPixel(row, col).getNormal(), (1.0 / gamma))));
+            .setBlue((int) (fractalImage.getPixel(row, col).getBlue()
+                * Math.pow(fractalImage.getPixel(row, col).getNormal(), (1.0 / gamma))));
     }
 
     public List<AffineTransformation> generateAffineTransformations(int transformationsCount) {

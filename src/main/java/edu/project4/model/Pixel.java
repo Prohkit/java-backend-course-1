@@ -1,10 +1,6 @@
 package edu.project4.model;
 
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-
 public class Pixel {
-    private static final Random random = new Random();
     private int red;
     private int green;
     private int blue;

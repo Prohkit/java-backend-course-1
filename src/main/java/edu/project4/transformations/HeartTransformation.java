@@ -8,7 +8,7 @@ public class HeartTransformation implements Transformation {
         return sqrt * Math.sin(sqrt * Math.atan(y / x));
     }
 
-    private double getNewY(double x,double y) {
+    private double getNewY(double x, double y) {
         double sqrt = Math.sqrt(x * x + y * y);
         return -sqrt * Math.cos(sqrt * Math.atan(y / x));
     }
