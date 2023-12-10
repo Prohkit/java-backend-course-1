@@ -1,14 +1,14 @@
-package edu.project4.Transformations;
+package edu.project4.transformations;
 
 import edu.project4.Point;
 
-public class PolarTransformation implements Transformation {
+public class SphereTransformation implements Transformation {
     private double getNewX(double x, double y) {
-        return Math.atan(y / x) / Math.PI;
+        return x / (x * x + y * y);
     }
 
     private double getNewY(double x, double y) {
-        return Math.sqrt(x * x + y * y) - 1;
+        return y / (x * x + y * y);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package edu.project4.Transformations;
+package edu.project4.transformations;
 
 import edu.project4.Point;
 import static java.lang.Math.PI;

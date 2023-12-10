@@ -29,7 +29,7 @@ public class FractalImage {
         return (pixels.length > x && pixels[0].length > y);
     }
 
-    Pixel getPixel(int x, int y) {
+    public Pixel getPixel(int x, int y) {
         if (contains(x, y)) {
             return pixels[x][y];
         }

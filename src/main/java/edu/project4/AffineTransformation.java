@@ -1,10 +1,8 @@
 package edu.project4;
 
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class AffineTransformation {
-    private static final Random random = new Random();
     private static final int coefFrom = -1;
     private static final int coefTo = 1;
     private double a;
