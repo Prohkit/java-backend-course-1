@@ -1,0 +1,5 @@
+Benchmark,Mode,Score,Units
+ReflectionBenchmark.directAccess,avgt,0.467,ns/op
+ReflectionBenchmark.lambdaMetaFactory,avgt,0.655,ns/op
+ReflectionBenchmark.methodHandles,avgt,2.960,ns/op
+ReflectionBenchmark.reflection,avgt,5.528,ns/op
